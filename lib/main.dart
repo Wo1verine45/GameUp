@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app/sizes_helpers.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,13 +31,14 @@ class _MyHomePageState extends State<MyHomePage> {
     colors: [Color.fromRGBO(255, 0, 199, 1.0), Colors.white],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-  ).createShader(const Rect.fromLTWH(0.0, 0.0, 320.0, 80.0));
+  ).createShader(const Rect.fromLTWH(0.0, 0.0, 300.0, 60.0));
 
   int _counter = 0;
 
   void _incrementCounter() {
     setState(() {
       _counter++;
+      print(_counter);
     });
   }
 
@@ -69,21 +71,72 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const Text(
-                    'You have pushed the button this many times:',
+                  Container(
+                    width: displayWidth(context),
+                    decoration: const BoxDecoration(
+                        border: Border(
+                      top: BorderSide(width: 2.0, color: Colors.white),
+                    )),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.fromLTRB(0, 50, 0, 50),
+                        ),
+                        onPressed: _incrementCounter,
+                        child: const Text(
+                          'Jogo da Forca',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 27,
+                              fontFamily: 'Inter'),
+                        )),
                   ),
-                  Text(
-                    '$_counter',
-                    style: Theme.of(context).textTheme.headlineMedium,
+                  Container(
+                    width: displayWidth(context),
+                    decoration: const BoxDecoration(
+                        border: Border(
+                            top: BorderSide(width: 2.0, color: Colors.white),
+                            bottom:
+                                BorderSide(width: 2.0, color: Colors.white))),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.fromLTRB(0, 50, 0, 50),
+                        ),
+                        onPressed: _incrementCounter,
+                        child: const Text(
+                          'Jogo da Velha',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 27,
+                              fontFamily: 'Inter'),
+                        )),
+                  ),
+                  Container(
+                    width: displayWidth(context),
+                    decoration: const BoxDecoration(
+                        border: Border(
+                            bottom:
+                                BorderSide(width: 2.0, color: Colors.white))),
+                    child: TextButton(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.fromLTRB(0, 50, 0, 50),
+                        ),
+                        onPressed: _incrementCounter,
+                        child: const Text(
+                          'Jogo da Memória',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 27,
+                              fontFamily: 'Inter'),
+                        )),
+                  ),
+                  const Text(
+                    'V.0.0.1',
+                    style: TextStyle(
+                        color: Colors.white, fontSize: 12, fontFamily: 'Inter'),
                   ),
                 ],
               ),
             )),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
