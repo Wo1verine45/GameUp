@@ -81,7 +81,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.fromLTRB(0, 50, 0, 50),
                         ),
-                        onPressed: _incrementCounter,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const NextPage()));
+                        },
                         child: const Text(
                           'Jogo da Forca',
                           style: TextStyle(
@@ -101,7 +106,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.fromLTRB(0, 50, 0, 50),
                         ),
-                        onPressed: _incrementCounter,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const NextPage2()));
+                        },
                         child: const Text(
                           'Jogo da Velha',
                           style: TextStyle(
@@ -120,7 +130,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.fromLTRB(0, 50, 0, 50),
                         ),
-                        onPressed: _incrementCounter,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const NextPage3()));
+                        },
                         child: const Text(
                           'Jogo da Memória',
                           style: TextStyle(
@@ -137,6 +152,54 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             )),
+      ),
+    );
+  }
+}
+
+class NextPage extends StatelessWidget {
+  const NextPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Next Page'),
+      ),
+      body: const Center(
+        child: Text('GeeksForGeeks'),
+      ),
+    );
+  }
+}
+
+class NextPage2 extends StatelessWidget {
+  const NextPage2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Next Page'),
+      ),
+      body: const Center(
+        child: Text('GeeksForGeeks'),
+      ),
+    );
+  }
+}
+
+class NextPage3 extends StatelessWidget {
+  const NextPage3({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Next Page'),
+      ),
+      body: const Center(
+        child: Text('GeeksForGeeks'),
       ),
     );
   }
