@@ -1,3 +1,6 @@
+import 'package:app/utils/hang.dart';
+import 'package:app/widget/figure_image.dart';
+import 'package:app/widget/letter.dart';
 import 'package:flutter/material.dart';
 import 'package:app/sizes_helpers.dart';
 
@@ -85,7 +88,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const NextPage()));
+                                  builder: (context) => const JogoDaForca(
+                                        title: 'GameUp',
+                                      )));
                         },
                         child: const Text(
                           'Jogo da Forca',
@@ -157,21 +162,149 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class NextPage extends StatelessWidget {
-  const NextPage({super.key});
+class JogoDaForca extends StatefulWidget {
+  const JogoDaForca({super.key, required this.title});
 
+  final String title;
+
+  @override
+  State<JogoDaForca> createState() => _JogoDaForca();
+}
+
+class _JogoDaForca extends State<JogoDaForca> {
+  //TODO: colocar todas as palavras
+  String word = "Flutter".toUpperCase();
+  List<String> alphabets = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
+  ];
+
+  final Shader _linearGradient = const LinearGradient(
+    colors: [Color.fromRGBO(255, 0, 199, 1.0), Colors.white],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  ).createShader(const Rect.fromLTWH(0.0, 0.0, 300.0, 60.0));
+
+  //TODO: mudar o design para o do figma
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Next Page'),
+        centerTitle: true,
+        title: Text(
+          widget.title,
+          style: TextStyle(
+            fontFamily: 'LuckiestGuy',
+            fontSize: 50,
+            foreground: Paint()..shader = _linearGradient,
+          ),
+        ),
+        backgroundColor: const Color.fromRGBO(58, 34, 204, 1.0),
       ),
-      body: const Center(
-        child: Text('GeeksForGeeks'),
+      body: Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+              Color.fromRGBO(58, 34, 204, 1.0),
+              Color.fromRGBO(250, 1, 140, 1.0),
+            ])),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Stack(
+                children: [
+                  figureImage(Hang.tries >= 0, "images/hang.png"),
+                  figureImage(Hang.tries >= 1, "images/head.png"),
+                  figureImage(Hang.tries >= 2, "images/body.png"),
+                  figureImage(Hang.tries >= 3, "images/ra.png"),
+                  figureImage(Hang.tries >= 4, "images/la.png"),
+                  figureImage(Hang.tries >= 5, "images/rl.png"),
+                  figureImage(Hang.tries >= 6, "images/ll.png"),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: word
+                  .split('')
+                  .map((e) => letter(e.toUpperCase(),
+                      !Hang.selectedChar.contains(e.toUpperCase())))
+                  .toList(),
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: 250,
+              child: GridView.count(
+                crossAxisCount: 7,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                padding: EdgeInsets.all(8),
+                children: alphabets.map((e) {
+                  return RawMaterialButton(
+                    onPressed: Hang.selectedChar.contains(e)
+                        ? null
+                        : () {
+                            setState(() {
+                              Hang.selectedChar.add(e);
+                              print(Hang.selectedChar);
+                              if (!word.split('').contains(e.toUpperCase())) {
+                                Hang.tries++;
+                              }
+                            });
+                          },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      e,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    fillColor: Hang.selectedChar.contains(e)
+                        ? Colors.black
+                        : Colors.blue,
+                  );
+                }).toList(),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 }
+//TODO: adicionar um fim pra forca
 
 class NextPage2 extends StatelessWidget {
   const NextPage2({super.key});
