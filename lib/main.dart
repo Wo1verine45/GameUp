@@ -172,7 +172,7 @@ class JogoDaForca extends StatefulWidget {
 }
 
 class _JogoDaForca extends State<JogoDaForca> {
-  //TODO: colocar todas as palavras
+  //TODO: colocar todas as palavras, talvez seja muito difícil
   String word = "Flutter".toUpperCase();
   List<String> alphabets = [
     "A",
@@ -238,6 +238,34 @@ class _JogoDaForca extends State<JogoDaForca> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const Text(
+              'Jogo da Forca',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 20, fontFamily: 'Inter'),
+            ),
+            const Text(
+              'Letras Usadas:',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 16, fontFamily: 'Inter'),
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: GridView.count(
+                crossAxisCount: 26,
+                padding: EdgeInsets.all(8),
+                children: alphabets.map((e) {
+                  return Text(
+                    Hang.selectedChar.contains(e) ? e : '',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontFamily: 'Inter',
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
             Center(
               child: Stack(
                 children: [
@@ -259,6 +287,22 @@ class _JogoDaForca extends State<JogoDaForca> {
                       !Hang.selectedChar.contains(e.toUpperCase())))
                   .toList(),
             ),
+            Text(
+              'Digite uma letra:',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontFamily: 'Inter',
+              ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+            ),
+            /*
             SizedBox(
               width: double.infinity,
               height: 250,
@@ -297,7 +341,13 @@ class _JogoDaForca extends State<JogoDaForca> {
                   );
                 }).toList(),
               ),
-            )
+            ),
+            */
+            const Text(
+              'V.0.0.1',
+              style: TextStyle(
+                  color: Colors.white, fontSize: 12, fontFamily: 'Inter'),
+            ),
           ],
         ),
       ),
