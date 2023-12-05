@@ -116,7 +116,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const NextPage2()));
+                                  builder: (context) => const JogoDaVelha(
+                                        title: 'GameUp',
+                                      )));
                         },
                         child: const Text(
                           'Jogo da Velha',
@@ -348,18 +350,221 @@ class _JogoDaForca extends State<JogoDaForca> {
 }
 //TODO: adicionar um fim pra forca
 
-class NextPage2 extends StatelessWidget {
-  const NextPage2({super.key});
+class JogoDaVelha extends StatefulWidget {
+  const JogoDaVelha({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<JogoDaVelha> createState() => _JogoDaVelha();
+}
+
+class _JogoDaVelha extends State<JogoDaVelha> {
+  final Shader _linearGradient = const LinearGradient(
+    colors: [Color.fromRGBO(255, 0, 199, 1.0), Colors.white],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  ).createShader(const Rect.fromLTWH(0.0, 0.0, 300.0, 60.0));
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController player1Controller = TextEditingController();
+  final TextEditingController player2Controller = TextEditingController();
+
+  late List<List<String>> _board;
+  late String _currentPlayer;
+  late String _winner;
+  late bool _gameOver;
+
+  @override
+  void initState() {
+    super.initState();
+    _board = List.generate(3, (_) => List.generate(3, (_) => ""));
+    _currentPlayer = "X";
+    _winner = "";
+    _gameOver = false;
+  }
+
+  void _resetGame() {
+    setState(() {
+      _board = List.generate(3, (_) => List.generate(3, (_) => ""));
+      _currentPlayer = "X";
+      _winner = "";
+      _gameOver = false;
+    });
+  }
+
+  void _makeMove(int row, int col) {
+    if (_board[row][col] != "" || _gameOver) {
+      return;
+    }
+    setState(() {
+      _board[row][col] = _currentPlayer;
+      if (_board[row][0] == _currentPlayer &&
+          _board[row][1] == _currentPlayer &&
+          _board[row][2] == _currentPlayer) {
+        _winner = _currentPlayer;
+        _gameOver = true;
+      } else if (_board[0][col] == _currentPlayer &&
+          _board[1][col] == _currentPlayer &&
+          _board[2][col] == _currentPlayer) {
+        _winner = _currentPlayer;
+        _gameOver = true;
+      } else if (_board[0][0] == _currentPlayer &&
+          _board[1][1] == _currentPlayer &&
+          _board[2][2] == _currentPlayer) {
+        _winner = _currentPlayer;
+        _gameOver = true;
+      } else if (_board[0][2] == _currentPlayer &&
+          _board[1][1] == _currentPlayer &&
+          _board[2][0] == _currentPlayer) {
+        _winner = _currentPlayer;
+        _gameOver = true;
+      }
+      _currentPlayer = _currentPlayer == "X" ? "O" : "X";
+      if (!_board.any((row) => row.any((cell) => cell == ""))) {
+        _gameOver = true;
+        _winner = "Empatou";
+      }
+      if (_winner != "") {}
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Next Page'),
+        centerTitle: true,
+        title: Text(
+          widget.title,
+          style: TextStyle(
+            fontFamily: 'LuckiestGuy',
+            fontSize: 50,
+            foreground: Paint()..shader = _linearGradient,
+          ),
+        ),
+        backgroundColor: const Color.fromRGBO(58, 34, 204, 1.0),
       ),
-      body: const Center(
-        child: Text('GeeksForGeeks'),
-      ),
+      body: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                Color.fromRGBO(58, 34, 204, 1.0),
+                Color.fromRGBO(250, 1, 140, 1.0),
+              ])),
+          child: SingleChildScrollView(
+              child: Padding(
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Jogo da Velha',
+                    style: TextStyle(
+                        color: Colors.white, fontSize: 20, fontFamily: 'Inter'),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(250, 1, 140, 0.5),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    margin: EdgeInsets.fromLTRB(100, 5, 100, 5),
+                    child: GridView.builder(
+                        itemCount: 9,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3),
+                        itemBuilder: (context, index) {
+                          int row = index ~/ 3;
+                          int col = index % 3;
+                          return GestureDetector(
+                            onTap: () => _makeMove(row, col),
+                            child: Container(
+                              margin: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                  color: Color.fromRGBO(58, 34, 204, 0.75),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                  child: Text(
+                                _board[row][col],
+                                style: TextStyle(
+                                  fontSize: 120,
+                                  fontWeight: FontWeight.bold,
+                                  color: _board[row][col] == "X"
+                                      ? Colors.black
+                                      : Colors.white,
+                                ),
+                              )),
+                            ),
+                          );
+                        }),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  SizedBox(
+                    height: 60,
+                    child: Column(children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Vez do: ",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                          //TODO:deixar o design do de quem é a vez igual do figma
+                          Text(
+                            "$_currentPlayer",
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                fontSize: 35,
+                                color: _currentPlayer == "X"
+                                    ? Colors.black
+                                    : Colors.white),
+                          ),
+                        ],
+                      ),
+                    ]),
+                  ),
+                  //TODO: adicionar um texto mostrando quem venceu ou que empatou
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap: _resetGame,
+                        child: Container(
+                            margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(58, 34, 204, 1.0),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 18, horizontal: 20),
+                            child: Text(
+                              "Reiniciar",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            )),
+                      ),
+                    ],
+                  ),
+                  const Text(
+                    'V.0.0.1',
+                    style: TextStyle(
+                        color: Colors.white, fontSize: 12, fontFamily: 'Inter'),
+                  ),
+                ]),
+          ))),
     );
   }
 }
