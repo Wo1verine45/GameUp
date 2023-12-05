@@ -48,6 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //TODO: o título ficou muito grudado em cima
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -149,6 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               fontFamily: 'Inter'),
                         )),
                   ),
+                  //TODO: colocar na parte de baixo da tela
                   const Text(
                     'V.0.0.1',
                     style: TextStyle(
@@ -203,6 +205,9 @@ class _JogoDaForca extends State<JogoDaForca> {
     "Z"
   ];
 
+  final _textController = TextEditingController();
+  String userPost = '';
+
   final Shader _linearGradient = const LinearGradient(
     colors: [Color.fromRGBO(255, 0, 199, 1.0), Colors.white],
     begin: Alignment.topCenter,
@@ -226,131 +231,118 @@ class _JogoDaForca extends State<JogoDaForca> {
         backgroundColor: const Color.fromRGBO(58, 34, 204, 1.0),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-              Color.fromRGBO(58, 34, 204, 1.0),
-              Color.fromRGBO(250, 1, 140, 1.0),
-            ])),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Jogo da Forca',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 20, fontFamily: 'Inter'),
-            ),
-            const Text(
-              'Letras Usadas:',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 16, fontFamily: 'Inter'),
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: GridView.count(
-                crossAxisCount: 26,
-                padding: EdgeInsets.all(8),
-                children: alphabets.map((e) {
-                  return Text(
-                    Hang.selectedChar.contains(e) ? e : '',
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                Color.fromRGBO(58, 34, 204, 1.0),
+                Color.fromRGBO(250, 1, 140, 1.0),
+              ])),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(
+                  'Jogo da Forca',
+                  style: TextStyle(
+                      color: Colors.white, fontSize: 20, fontFamily: 'Inter'),
+                ),
+                const Text(
+                  'Letras Usadas:',
+                  style: TextStyle(
+                      color: Colors.white, fontSize: 16, fontFamily: 'Inter'),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: GridView.count(
+                    crossAxisCount: 26,
+                    padding: const EdgeInsets.all(8),
+                    children: alphabets.map((e) {
+                      return Text(
+                        Hang.selectedChar.contains(e) ? e : '',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontFamily: 'Inter',
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Center(
+                  child: Stack(
+                    children: [
+                      figureImage(Hang.tries >= 0, "images/hang.png"),
+                      figureImage(Hang.tries >= 1, "images/head.png"),
+                      figureImage(Hang.tries >= 2, "images/body.png"),
+                      figureImage(Hang.tries >= 3, "images/ra.png"),
+                      figureImage(Hang.tries >= 4, "images/la.png"),
+                      figureImage(Hang.tries >= 5, "images/rl.png"),
+                      figureImage(Hang.tries >= 6, "images/ll.png"),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: word
+                      .split('')
+                      .map((e) => letter(e.toUpperCase(),
+                          !Hang.selectedChar.contains(e.toUpperCase())))
+                      .toList(),
+                ),
+                const Text(
+                  'Digite uma letra:',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                //TODO: fazer com que o usuário só possa escrever uma letra
+                TextField(
+                  controller: _textController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    setState(() {
+                      userPost = _textController.text.toUpperCase();
+                      Hang.selectedChar.contains(userPost)
+                          ? null
+                          : Hang.selectedChar.add(userPost);
+                      print(Hang.selectedChar);
+                      if (!word.split('').contains(userPost.toUpperCase())) {
+                        Hang.tries++;
+                      }
+                    });
+                  },
+                  color: const Color.fromRGBO(58, 34, 204, 1.0),
+                  child: const Text(
+                    'Post',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontFamily: 'Inter',
                     ),
-                  );
-                }).toList(),
-              ),
+                  ),
+                ),
+                const Text(
+                  'V.0.0.1',
+                  style: TextStyle(
+                      color: Colors.white, fontSize: 12, fontFamily: 'Inter'),
+                ),
+              ],
             ),
-            Center(
-              child: Stack(
-                children: [
-                  figureImage(Hang.tries >= 0, "images/hang.png"),
-                  figureImage(Hang.tries >= 1, "images/head.png"),
-                  figureImage(Hang.tries >= 2, "images/body.png"),
-                  figureImage(Hang.tries >= 3, "images/ra.png"),
-                  figureImage(Hang.tries >= 4, "images/la.png"),
-                  figureImage(Hang.tries >= 5, "images/rl.png"),
-                  figureImage(Hang.tries >= 6, "images/ll.png"),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: word
-                  .split('')
-                  .map((e) => letter(e.toUpperCase(),
-                      !Hang.selectedChar.contains(e.toUpperCase())))
-                  .toList(),
-            ),
-            Text(
-              'Digite uma letra:',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontFamily: 'Inter',
-              ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                filled: true,
-                fillColor: Colors.white,
-              ),
-            ),
-            /*
-            SizedBox(
-              width: double.infinity,
-              height: 250,
-              child: GridView.count(
-                crossAxisCount: 7,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                padding: EdgeInsets.all(8),
-                children: alphabets.map((e) {
-                  return RawMaterialButton(
-                    onPressed: Hang.selectedChar.contains(e)
-                        ? null
-                        : () {
-                            setState(() {
-                              Hang.selectedChar.add(e);
-                              print(Hang.selectedChar);
-                              if (!word.split('').contains(e.toUpperCase())) {
-                                Hang.tries++;
-                              }
-                            });
-                          },
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      e,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    fillColor: Hang.selectedChar.contains(e)
-                        ? Colors.black
-                        : Colors.blue,
-                  );
-                }).toList(),
-              ),
-            ),
-            */
-            const Text(
-              'V.0.0.1',
-              style: TextStyle(
-                  color: Colors.white, fontSize: 12, fontFamily: 'Inter'),
-            ),
-          ],
-        ),
-      ),
+          )),
     );
   }
 }
