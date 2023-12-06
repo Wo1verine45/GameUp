@@ -1,4 +1,5 @@
 import 'package:app/utils/hang.dart';
+import 'package:app/utils/memory.dart';
 import 'package:app/widget/figure_image.dart';
 import 'package:app/widget/letter.dart';
 import 'package:flutter/material.dart';
@@ -142,7 +143,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const NextPage3()));
+                                  builder: (context) => const JogoDaMemoria(
+                                        title: 'GameUp',
+                                      )));
                         },
                         child: const Text(
                           'Jogo da Memória',
@@ -217,6 +220,7 @@ class _JogoDaForca extends State<JogoDaForca> {
   ).createShader(const Rect.fromLTWH(0.0, 0.0, 300.0, 60.0));
 
   //TODO: mudar o design para o do figma
+  //TODO: se clicar no título tbm volta pro menu
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -329,7 +333,7 @@ class _JogoDaForca extends State<JogoDaForca> {
                   },
                   color: const Color.fromRGBO(58, 34, 204, 1.0),
                   child: const Text(
-                    'Post',
+                    'Enviar',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -588,17 +592,135 @@ class _JogoDaVelha extends State<JogoDaVelha> {
   }
 }
 
-class NextPage3 extends StatelessWidget {
-  const NextPage3({super.key});
+class JogoDaMemoria extends StatefulWidget {
+  const JogoDaMemoria({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<JogoDaMemoria> createState() => _JogoDaMemoria();
+}
+
+class _JogoDaMemoria extends State<JogoDaMemoria> {
+  final Shader _linearGradient = const LinearGradient(
+    colors: [Color.fromRGBO(255, 0, 199, 1.0), Colors.white],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  ).createShader(const Rect.fromLTWH(0.0, 0.0, 300.0, 60.0));
+
+  Memory _game = Memory();
+
+  @override
+  void initState() {
+    super.initState();
+    _game.initGame();
+  }
 
   @override
   Widget build(BuildContext context) {
+    double screen_width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Next Page'),
+        centerTitle: true,
+        title: Text(
+          widget.title,
+          style: TextStyle(
+            fontFamily: 'LuckiestGuy',
+            fontSize: 50,
+            foreground: Paint()..shader = _linearGradient,
+          ),
+        ),
+        backgroundColor: const Color.fromRGBO(58, 34, 204, 1.0),
       ),
-      body: const Center(
-        child: Text('GeeksForGeeks'),
+      body: Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+              Color.fromRGBO(58, 34, 204, 1.0),
+              Color.fromRGBO(250, 1, 140, 1.0),
+            ])),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "Jogo da Memória",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 24,
+              ),
+              SizedBox(
+                height: displayWidth(context) * 0.5,
+                width: displayWidth(context) * 0.5,
+                child: GridView.builder(
+                    itemCount: _game.gameImg!.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    padding: EdgeInsets.all(16),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          print(_game.cards_list[index]);
+                          setState(() {
+                            _game.gameImg![index] = _game.cards_list[index];
+                            _game.matchCheck
+                                .add({index: _game.cards_list[index]});
+                          });
+                          if (_game.matchCheck.length == 2) {
+                            if (_game.matchCheck[0].values.first ==
+                                _game.matchCheck[1].values.first) {
+                              print("true");
+                              _game.matchCheck.clear();
+                            } else {
+                              print("false");
+                              Future.delayed(Duration(milliseconds: 500), () {
+                                print(_game.gameImg);
+                                setState(() {
+                                  _game.gameImg![_game.matchCheck[0].keys
+                                      .first] = _game.hiddenCardpath;
+                                  _game.gameImg![_game.matchCheck[1].keys
+                                      .first] = _game.hiddenCardpath;
+                                  _game.matchCheck.clear();
+                                });
+                              });
+                            }
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              image: DecorationImage(
+                                image: AssetImage(_game.gameImg![index]),
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                      );
+                    }),
+              ),
+              const Text(
+                'V.0.0.1',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ]),
       ),
     );
   }
