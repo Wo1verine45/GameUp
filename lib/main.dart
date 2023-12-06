@@ -474,7 +474,7 @@ class _JogoDaVelha extends State<JogoDaVelha> {
                       color: Color.fromRGBO(250, 1, 140, 0.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    margin: EdgeInsets.fromLTRB(100, 5, 100, 5),
+                    margin: EdgeInsets.fromLTRB(100, 5, 100, 2),
                     child: GridView.builder(
                         itemCount: 9,
                         shrinkWrap: true,
@@ -512,22 +512,41 @@ class _JogoDaVelha extends State<JogoDaVelha> {
                   SizedBox(
                     height: 60,
                     child: Column(children: [
-                      Row(
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             "Vez do: ",
                             style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
-                          //TODO:deixar o design do de quem é a vez igual do figma
-                          Text(
-                            "$_currentPlayer",
-                            style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                fontSize: 35,
-                                color: _currentPlayer == "X"
-                                    ? Colors.black
-                                    : Colors.white),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                "X",
+                                style: TextStyle(
+                                    decoration: _currentPlayer == "X"
+                                        ? TextDecoration.underline
+                                        : TextDecoration.none,
+                                    fontWeight: _currentPlayer == "X"
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    fontSize: 35,
+                                    color: Colors.black),
+                              ),
+                              Text(
+                                "O",
+                                style: TextStyle(
+                                    decoration: _currentPlayer == "O"
+                                        ? TextDecoration.underline
+                                        : TextDecoration.none,
+                                    fontWeight: _currentPlayer == "O"
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                    fontSize: 35,
+                                    color: Colors.white),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -540,7 +559,7 @@ class _JogoDaVelha extends State<JogoDaVelha> {
                       InkWell(
                         onTap: _resetGame,
                         child: Container(
-                            margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                            margin: EdgeInsets.fromLTRB(0, 15, 0, 15),
                             decoration: BoxDecoration(
                               color: const Color.fromRGBO(58, 34, 204, 1.0),
                               borderRadius: BorderRadius.circular(10),
